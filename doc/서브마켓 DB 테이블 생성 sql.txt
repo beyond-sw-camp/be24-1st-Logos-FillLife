@@ -1,0 +1,105 @@
+-- 1. 회원 (users)
+-- PK 이름을 user_idx로 통일했습니다.
+CREATE TABLE users (
+    user_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '회원 고유번호',
+    name VARCHAR(20) NOT NULL COMMENT '회원 이름',
+    email VARCHAR(40) UNIQUE NOT NULL COMMENT '이메일 겸 아이디',
+    password VARCHAR(255) NOT NULL COMMENT '비밀번호',
+    tel VARCHAR(20) NOT NULL COMMENT '전화번호',
+    address VARCHAR(100) NOT NULL COMMENT '주소',
+    point INT DEFAULT 0 NOT NULL COMMENT '보유 포인트',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성일자',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '변경일자'
+);
+
+-- 2. 카테고리 (category)
+CREATE TABLE category (
+    category_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '카테고리 번호',
+    name VARCHAR(20) NOT NULL COMMENT '카테고리명'
+);
+
+-- 3. 상품 (products)
+-- products_idx -> product_idx (단수형 통일 추천)
+CREATE TABLE products (
+    product_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '상품 번호',
+    category_idx INT NOT NULL COMMENT '카테고리 번호',
+    name VARCHAR(50) NOT NULL COMMENT '상품명',
+    price INT NOT NULL COMMENT '가격',
+    stock INT DEFAULT 0 NOT NULL COMMENT '재고량',
+    description TEXT NOT NULL COMMENT '상품 설명',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '등록일',
+    FOREIGN KEY (category_idx) REFERENCES category(category_idx)
+);
+
+-- 4. 주문 (orders)
+-- products_idx 삭제됨 (완벽!)
+CREATE TABLE orders (
+    order_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '주문 번호',
+    user_idx INT NOT NULL COMMENT '회원 번호 (FK 통일)',
+    total_price INT NOT NULL COMMENT '총 주문 금액',
+    status VARCHAR(20) NOT NULL COMMENT '주문 상태',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '주문일자',
+    FOREIGN KEY (user_idx) REFERENCES users(user_idx)
+);
+
+-- 5. 주문상세 (order_items)
+CREATE TABLE order_items (
+    order_item_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '주문 상세 번호',
+    order_idx INT NOT NULL COMMENT '주문 번호',
+    product_idx INT NOT NULL COMMENT '상품 번호',
+    count INT NOT NULL COMMENT '주문 수량',
+    price_snapshot INT NOT NULL COMMENT '주문 당시 상품 가격',
+    product_status VARCHAR(10) COMMENT '상품별 상태',
+    FOREIGN KEY (order_idx) REFERENCES orders(order_idx),
+    FOREIGN KEY (product_idx) REFERENCES products(product_idx)
+);
+
+-- 6. 결제 (payments)
+CREATE TABLE payments (
+    payment_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '결제 번호',
+    order_idx INT NOT NULL COMMENT '주문 번호',
+    method VARCHAR(15) NOT NULL COMMENT '결제 수단',
+    discount_amount INT DEFAULT 0 COMMENT '할인 금액',
+    refund_status BOOLEAN DEFAULT FALSE NOT NULL COMMENT '환불 여부',
+    real_amount INT NOT NULL COMMENT '실 결제 금액',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '결제일',
+    FOREIGN KEY (order_idx) REFERENCES orders(order_idx)
+);
+
+-- 7. 구매 알람 (order_alert)
+-- con_cycle_status, alert_status 등 필요한 플래그 완벽함
+CREATE TABLE order_alert (
+    alert_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '알람 설정 번호',
+    user_idx INT NOT NULL COMMENT '회원 번호',
+    product_idx INT NOT NULL COMMENT '상품 번호',
+    con_cycle_status BOOLEAN DEFAULT FALSE COMMENT '소비주기 설정 여부(0:자동, 1:수동)',
+    con_cycle INT NOT NULL COMMENT '소비 주기(일)',
+    next_alert_date TIMESTAMP NOT NULL COMMENT '다음 알림 발송 예정일',
+    alert_status BOOLEAN DEFAULT FALSE COMMENT '알림 활성화 여부',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '설정 생성일',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '설정 변경일',
+    FOREIGN KEY (user_idx) REFERENCES users(user_idx),
+    FOREIGN KEY (product_idx) REFERENCES products(product_idx)
+);
+
+-- 8. 장바구니 (cart)
+CREATE TABLE cart (
+    cart_item_id INT AUTO_INCREMENT PRIMARY KEY COMMENT '장바구니 고유 ID',
+    user_idx INT NOT NULL COMMENT '회원 번호',
+    product_idx INT NOT NULL COMMENT '상품 번호',
+    quantity INT DEFAULT 1 COMMENT '수량',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '담은 날짜',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수량 변경일',
+    FOREIGN KEY (user_idx) REFERENCES users(user_idx),
+    FOREIGN KEY (product_idx) REFERENCES products(product_idx)
+);
+
+-- 9. 사용자 활동 로그 (log)
+CREATE TABLE log (
+    log_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '로그 번호',
+    user_idx INT NOT NULL COMMENT '회원 번호',
+    product_idx INT COMMENT '상품 번호',
+    action_type VARCHAR(20) NOT NULL COMMENT '행동 유형',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '발생 시간',
+    FOREIGN KEY (user_idx) REFERENCES users(user_idx)
+);
