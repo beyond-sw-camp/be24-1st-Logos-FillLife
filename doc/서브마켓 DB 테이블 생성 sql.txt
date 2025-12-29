@@ -1,5 +1,19 @@
+-- 1. 무결성 제약조건 검사 비활성화 (삭제 시 외래키 오류 방지)
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 2. 기존 Database가 존재하면 삭제 (초기화)
+DROP DATABASE IF EXISTS FillLife;
+
+-- 3. Database 생성 및 선택
+CREATE DATABASE FillLife DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE FillLife;
+
+-- ==========================================
+-- 테이블 생성 (이름 통일: user_idx, product_idx 등 단수형)
+-- ==========================================
+
 -- 1. 회원 (users)
--- PK 이름을 user_idx로 통일했습니다.
+DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     user_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '회원 고유번호',
     name VARCHAR(20) NOT NULL COMMENT '회원 이름',
@@ -13,13 +27,14 @@ CREATE TABLE users (
 );
 
 -- 2. 카테고리 (category)
+DROP TABLE IF EXISTS category;
 CREATE TABLE category (
     category_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '카테고리 번호',
     name VARCHAR(20) NOT NULL COMMENT '카테고리명'
 );
 
 -- 3. 상품 (products)
--- products_idx -> product_idx (단수형 통일 추천)
+DROP TABLE IF EXISTS products;
 CREATE TABLE products (
     product_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '상품 번호',
     category_idx INT NOT NULL COMMENT '카테고리 번호',
@@ -32,10 +47,10 @@ CREATE TABLE products (
 );
 
 -- 4. 주문 (orders)
--- products_idx 삭제됨 (완벽!)
+DROP TABLE IF EXISTS orders;
 CREATE TABLE orders (
     order_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '주문 번호',
-    user_idx INT NOT NULL COMMENT '회원 번호 (FK 통일)',
+    user_idx INT NOT NULL COMMENT '회원 번호',
     total_price INT NOT NULL COMMENT '총 주문 금액',
     status VARCHAR(20) NOT NULL COMMENT '주문 상태',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '주문일자',
@@ -43,6 +58,7 @@ CREATE TABLE orders (
 );
 
 -- 5. 주문상세 (order_items)
+DROP TABLE IF EXISTS order_items;
 CREATE TABLE order_items (
     order_item_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '주문 상세 번호',
     order_idx INT NOT NULL COMMENT '주문 번호',
@@ -55,6 +71,7 @@ CREATE TABLE order_items (
 );
 
 -- 6. 결제 (payments)
+DROP TABLE IF EXISTS payments;
 CREATE TABLE payments (
     payment_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '결제 번호',
     order_idx INT NOT NULL COMMENT '주문 번호',
@@ -67,7 +84,7 @@ CREATE TABLE payments (
 );
 
 -- 7. 구매 알람 (order_alert)
--- con_cycle_status, alert_status 등 필요한 플래그 완벽함
+DROP TABLE IF EXISTS order_alert;
 CREATE TABLE order_alert (
     alert_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '알람 설정 번호',
     user_idx INT NOT NULL COMMENT '회원 번호',
@@ -83,6 +100,7 @@ CREATE TABLE order_alert (
 );
 
 -- 8. 장바구니 (cart)
+DROP TABLE IF EXISTS cart;
 CREATE TABLE cart (
     cart_item_id INT AUTO_INCREMENT PRIMARY KEY COMMENT '장바구니 고유 ID',
     user_idx INT NOT NULL COMMENT '회원 번호',
@@ -95,6 +113,7 @@ CREATE TABLE cart (
 );
 
 -- 9. 사용자 활동 로그 (log)
+DROP TABLE IF EXISTS log;
 CREATE TABLE log (
     log_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '로그 번호',
     user_idx INT NOT NULL COMMENT '회원 번호',
@@ -103,3 +122,6 @@ CREATE TABLE log (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '발생 시간',
     FOREIGN KEY (user_idx) REFERENCES users(user_idx)
 );
+
+-- 4. 무결성 제약조건 검사 다시 활성화
+SET FOREIGN_KEY_CHECKS = 1;
