@@ -1,6 +1,6 @@
 <br>
 
-<h1 align="center" style="color: #61E786;">🛒 FillLife </h1><br>
+<h1 align="center" style="color: #94CE3A;">🛒 FillLife </h1><br>
 <div align="center">
   <img src="./img/FillLife_Logo.png" alt="FillLife logo" height="400" align="center" />
 </div>
