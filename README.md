@@ -85,7 +85,7 @@
 ## 🏗️ DB 테이블 설계도
 
 <a href='./doc/FillLife 프로젝트 DB 설계도 - 테이블.pdf' alt="FillLife_system architecture"> 
-<img src="./doc/FillLife_DB_테이블.jpg" alt="FillLife_system architecture" align="center" /> > DB 테이블 설계도 </a>
+<img src="./img/FillLife DB 설계.png" alt="FillLife_system architecture" align="center" /> > DB 테이블 설계도 </a>
 <br/>
 
 <br/>
