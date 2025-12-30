@@ -1,0 +1,50 @@
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS loop_insert_products_realistic$$
+CREATE PROCEDURE loop_insert_products_realistic()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DECLARE v_cat_idx INT;
+    DECLARE v_name VARCHAR(100);
+    DECLARE v_adj VARCHAR(20); -- 형용사
+    DECLARE v_noun VARCHAR(20); -- 명사
+    
+    SET autocommit = 0;
+
+    WHILE i <= 2000 DO
+        SET v_cat_idx = FLOOR(1 + RAND() * 10); -- 카테고리 1~10 랜덤
+        
+        -- 카테고리별로 상품명 조합 로직 (CASE문 활용)
+        CASE v_cat_idx
+            WHEN 1 THEN -- 식품
+                SET v_adj = ELT(FLOOR(1 + RAND() * 5), '신선한', '유기농', '달콤한', '프리미엄', '제주산');
+                SET v_noun = ELT(FLOOR(1 + RAND() * 5), '우유 1L', '삼겹살 500g', '사과 1박스', '쌀 10kg', '생수 2L');
+            WHEN 2 THEN -- 생활용품
+                SET v_adj = ELT(FLOOR(1 + RAND() * 5), '부드러운', '강력한', '오래가는', '순면', '대용량');
+                SET v_noun = ELT(FLOOR(1 + RAND() * 5), '화장지 30롤', '세탁세제', '섬유유연제', '물티슈', '치약 세트');
+            WHEN 5 THEN -- 가전
+                SET v_adj = ELT(FLOOR(1 + RAND() * 5), '최신형', '초고속', '스마트', '무선', '저소음');
+                SET v_noun = ELT(FLOOR(1 + RAND() * 5), '무선 청소기', '공기청정기', '블루투스 스피커', '헤어 드라이어', '가습기');
+            ELSE -- 그 외 카테고리 (공통)
+                SET v_adj = ELT(FLOOR(1 + RAND() * 5), '인기만점', '가성비', '럭셔리', '필수템', '한정판');
+                SET v_noun = CONCAT('상품_', i); -- 나머지는 간단하게
+        END CASE;
+
+        SET v_name = CONCAT(v_adj, ' ', v_noun);
+
+        INSERT INTO products (category_idx, name, price, stock, description)
+        VALUES (
+            v_cat_idx,
+            v_name,
+            FLOOR(1000 + RAND() * 99000), -- 1000원 ~ 10만원
+            FLOOR(10 + RAND() * 500),     -- 재고 10 ~ 500
+            CONCAT('이 상품은 ', v_name, '입니다. 최고의 품질을 보장합니다.')
+        );
+        SET i = i + 1;
+        IF i % 500 = 0 THEN COMMIT; END IF;
+    END WHILE;
+    COMMIT;
+    SET autocommit = 1;
+END$$
+
+DELIMITER ;
