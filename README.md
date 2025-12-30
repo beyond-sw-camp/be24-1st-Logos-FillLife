@@ -127,34 +127,25 @@
 
 ## 💡 부하테스트 전후 차이 비교
 
-<a href='' alt="load test" > > 부하 테스트 </a>
+<a href='./doc/FillLife 부하 테스트 보고서.pdf' alt="부하 테스트 보고서" > > 부하 테스트 보고서 </a>
 <hr/>
 
 #### 🔹 기본 세팅 <br />
-<img src="" alt="Defalt setting" align="center" />
-<br/>
+<img src="./doc/FillLife _부하테스트_기본세팅.jpg" alt="Defalt setting" align="center" />
+<br/><br/>
 
+#### 🔹 1. 내가 지난달에 산 금액 총 합계  <br />
+<img src="./doc/FillLife_부하테스트01.png" alt="Defalt setting" align="center" />
+<br/><br/>
+- 처리량(Throughput): 튜닝 전 대비 57.7% 급증 (141.5/sec → 223.1/sec)
+- 평균 응답 속도(Average Latency): 튜닝 전 대비 36.6% 단축 (647ms → 410ms)
+- 처리 용량: 동일 시간 내 처리한 샘플 수가 약 58% 증가 (8,512건 → 13,437건)
 
-<details>
-  <summary> 1. </summary>
-  <div markdown="1" style="margin-left: 20px;">
+#### 🔹 2. 리뷰 내용 키워드 검색   <br />
+<img src="./doc/FillLife_부하테스트02.png" alt="Defalt setting" align="center" />
+<br/><br/>
 
-<img src="" alt="before" align="center" />
-<br/>
-<img src="" alt="after" align="center" 
-
-  </div>
-</details>
-
-<details>
-  <summary> 2. </summary>
-  <div markdown="1" style="margin-left: 20px;">
-
-<img src="" alt="before" align="center" />
-<br/>
-<img src="" alt="after" align="center" 
-
-  </div>
-</details>
-
+- 처리량(Throughput): 튜닝 전 대비 62.5% 급증 (492.1/sec → 799.8/sec)
+- 평균 응답 속도: 튜닝 전 대비 64.5% 단축 (186ms → 66ms)
+- 데이터 효율: 요청당 평균 전송 바이트(Avg. Bytes)가 약 80% 감소 (1,690 → 347)
 
