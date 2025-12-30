@@ -23,16 +23,17 @@
 <br/><br/>
 
 ## 📌 프로젝트 소개
-<blockquote> 
 사용자 소비 패턴 분석 기반의 소진 주기 예측 및 장바구니 자동 완성 플랫폼
-</blockquote> <br/>
+<br/>
 
+<blockquote> 
 사용자의 쇼핑몰 행동 데이터(Log)와 구매 이력(Order)을 분석하여, 생필품이 떨어질 시점을 AI처럼 예측(Prediction)해 알림을 주고, 접속 시 구매할 확률이 높은 상품을 장바구니에 미리 담아주는(Auto-Completion) 초개인화 커머스이다.
+</blockquote>
 <br/><br/>
 
 ## 📄 요구사항 정의서
 
-<a href='./doc/FillLife 프로젝트 기획안.pdf' alt="FillLife_system architecture"> 
+<a href='./doc/FillLife 요구사항 정의서.pdf' alt="FillLife_system architecture"> 
 <img src="./doc/FillLife_요구사항.jpg" alt="FillLife_system architecture" align="center" /> > 요구사항 정의서 </a>
 <br/><br/>
 
