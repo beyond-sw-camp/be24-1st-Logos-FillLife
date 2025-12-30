@@ -64,6 +64,8 @@
 
 ## 🚧 아키텍쳐 설계
 
+<img src='./doc/FillLife System Architecture.png' alt='FillLife System Architecture' alien='center'>
+
 
 <br/>
 <details>
