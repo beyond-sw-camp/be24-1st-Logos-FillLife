@@ -22,6 +22,12 @@
 2025.12.29 ~ 2025.12.30
 <br/><br/>
 
+## 📂 관련 문서 및 테스트 목록
+
+* 
+* [⚡ 부하 테스트 상세 보기](./doc/FillLife 요구사항 정의서.pdf)
+* [📊 테스트 결과 보고서](./doc/FillLife 결과보고서.pdf)
+
 ## 📌 프로젝트 소개
 사용자 소비 패턴 분석 기반의 소진 주기 예측 및 장바구니 자동 완성 플랫폼
 <br/>
@@ -71,7 +77,7 @@
   <summary>레플리케이션을 선택한 이유</summary>
   <div markdown="1" style="margin-left: 20px;">
 
-본 프로젝트는 조회(Read) 트래픽이 80% 이상을 차지하는 이커머스 서비스의 특성과 대용량 데이터 분석에 따른 부하를 효율적으로 관리하기 위해 HAProxy 기반의 Master-Slave 레플리케이션 아키텍처를 구축했습니다. 쓰기(Write) 작업은 Master DB가, 대량의 조회와 ‘소비 패턴 분석’ 같은 무거운 쿼리는 HAProxy의 라운드 로빈 방식을 통해 Slave DB가 전담하도록 트래픽을 분리함으로써, 트랜잭션 잠금(Locking) 현상을 방지하고 일반 사용자의 구매 프로세스 속도를 쾌적하게 유지했습니다. 이를 통해 분석 쿼리와 트랜잭션을 효과적으로 격리했을 뿐만 아니라, 실시간 데이터 동기화를 통해 장애 발생 시에도 서비스를 지속할 수 있는 고가용성(High Availability) 환경을 확보했습니다.
+본 프로젝트는 조회(Read) 트래픽이 80% 이상을 차지하는 이커머스 서비스의 특성과 대용량 데이터 분석에 따른 부하를 효율적으로 관리하기 위해 Haproxy 기반의 Master-Slave 레플리케이션 아키텍처를 구축했습니다. 쓰기(Write) 작업은 Master DB가, 대량의 조회와 ‘소비 패턴 분석’ 같은 무거운 쿼리는 HAProxy의 라운드 로빈 방식을 통해 Slave DB가 전담하도록 트래픽을 분리함으로써, 트랜잭션 잠금(Locking) 현상을 방지하고 일반 사용자의 구매 프로세스 속도를 쾌적하게 유지했습니다. 이를 통해 분석 쿼리와 트랜잭션을 효과적으로 격리했을 뿐만 아니라, 실시간 데이터 동기화를 통해 장애 발생 시에도 서비스를 지속할 수 있는 고가용성(High Availability) 환경을 확보했습니다.
   </div>
 </details>
 
@@ -80,6 +86,15 @@
 ## 🧩 ERD
 
 <img src='./doc/FillLife_erd.png' alt='FillLife_ERD' alien='center'>
+
+<br/>
+
+## 🏗️ DB 테이블 설계도 
+
+<a href='./doc/FillLife 프로젝트 DB 설계도 - 테이블.pdf' alt="FillLife_system architecture"> 
+<img src="./doc/FillLife_DB_테이블.jpg" alt="FillLife_system architecture" align="center" /> > DB 테이블 설계도 </a>
+<br/><br/>
+
 
 <br/>
 
@@ -107,11 +122,27 @@
 
   결국 미래의 쇼핑몰은 단순히 물건을 파는 곳이 아니라, 소비자의 시간과 노력을 아껴주는 '필수 생활 관리 서비스'로 안착하게 될 것이다. 데이터를 통해 사용자의 라이프사이클을 이해하고, 그들의 장바구니를 선제적으로 관리해 주는 것. 이것이 바로 우리가 지향해야 할 차세대 지능형 이커머스의 모습이다.
 
+<br/>
+
+## SQL 구문
+* <a href='./doc/FileLife DB 생성 sql.txt' alt="DB 생성">  DB 생성 SQL </a>
+* <a href='./doc/FillLife 기능 테스트 sql.txt' alt="기능 테스트"> 기능 테스트 SQL </a>
+* <a href='./doc/INSERT 악성 sql.txt' alt="INSERT 악성 sql"> INSERT 악성 SQL </a>
+<br/>
 
 
-## 💡 부하테스트 전후 차이 
+## 💡 부하테스트 전후 차이 비교
+
+<a href='' alt="load test" > > 부하 테스트 </a>
+<hr/>
+
+#### 🔹 기본 세팅 <br />
+<img src="" alt="Defalt setting" align="center" />
+<br/>
+
+
 <details>
-  <summary>1번 SQL </summary>
+  <summary> 1. </summary>
   <div markdown="1" style="margin-left: 20px;">
 
 <img src="" alt="before" align="center" />
@@ -122,7 +153,7 @@
 </details>
 
 <details>
-  <summary>2번 SQL </summary>
+  <summary> 2. </summary>
   <div markdown="1" style="margin-left: 20px;">
 
 <img src="" alt="before" align="center" />
@@ -131,6 +162,5 @@
 
   </div>
 </details>
-
 
 
