@@ -86,7 +86,7 @@
 
 <a href='./doc/FillLife 프로젝트 DB 설계도 - 테이블.pdf' alt="FillLife_system architecture"> 
 <img src="./doc/FillLife_DB_테이블.jpg" alt="FillLife_system architecture" align="center" /> > DB 테이블 설계도 </a>
-<br/><br/>
+<br/>
 
 <br/>
 
@@ -122,7 +122,7 @@
 #### 🔹 Jmeter 기본 세팅 <br />
 
 <img src="./img/FillLife _부하테스트_기본세팅.jpg" alt="Defalt setting" align="center" />
-<br/><br/>
+<br/>
 
 #### 🔹 1. 내가 지난달에 산 금액 총 합계 <br />
 
