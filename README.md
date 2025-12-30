@@ -1,6 +1,6 @@
 <br>
 
-<h1 align="center" style="color: #61E786;">🛒 FillLife </h1><br>
+<h1 align="center" style="color: #94CE3A;">🛒 FillLife </h1><br>
 <div align="center">
   <img src="./img/FillLife_Logo.png" alt="FillLife logo" height="400" align="center" />
 </div>
@@ -32,8 +32,8 @@
 
 ## 📄 요구사항 정의서
 
-<a href='./doc/FillLife 요구사항 정의서.pdf' alt="FillLife_system architecture"> 
-<img src="./img/FillLife_요구사항.jpg" alt="FillLife_system architecture" align="center" /> > 요구사항 정의서 </a>
+<a href='./doc/FillLife 프로젝트 기획안.pdf' alt="FillLife_system architecture"> 
+<img src="./doc/FillLife_요구사항.jpg" alt="FillLife_system architecture" align="center" /> > 요구사항 정의서 </a>
 <br/><br/>
 
 
@@ -58,23 +58,19 @@
 ![Discord](https://img.shields.io/badge/Discord-5865F2.svg?style=for-the-badge&logo=discord&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=FFFFFF)
 
-<br>
-
 <br/>
 
 ## 🚧 아키텍쳐 설계
 
-<img src="./doc/FillLife System Architecture.png" alt="FillLife_system architecture" align="center" />
+<img src='./doc/FillLife System Architecture.png' alt='FillLife System Architecture' alien='center'>
+
 
 <br/>
 <details>
   <summary>레플리케이션을 선택한 이유</summary>
-  <div markdown="1">
-  <blockquote style="margin-left: 20px;">
+  <div markdown="1" style="margin-left: 20px;">
 
 본 프로젝트는 조회(Read) 트래픽이 80% 이상을 차지하는 이커머스 서비스의 특성과 대용량 데이터 분석에 따른 부하를 효율적으로 관리하기 위해 HAProxy 기반의 Master-Slave 레플리케이션 아키텍처를 구축했습니다. 쓰기(Write) 작업은 Master DB가, 대량의 조회와 ‘소비 패턴 분석’ 같은 무거운 쿼리는 HAProxy의 라운드 로빈 방식을 통해 Slave DB가 전담하도록 트래픽을 분리함으로써, 트랜잭션 잠금(Locking) 현상을 방지하고 일반 사용자의 구매 프로세스 속도를 쾌적하게 유지했습니다. 이를 통해 분석 쿼리와 트랜잭션을 효과적으로 격리했을 뿐만 아니라, 실시간 데이터 동기화를 통해 장애 발생 시에도 서비스를 지속할 수 있는 고가용성(High Availability) 환경을 확보했습니다.
-  </blockquote>
-  <br>
   </div>
 </details>
 
@@ -113,8 +109,27 @@
 
 
 ## 💡 부하테스트 전후 차이 
+<details>
+  <summary>1번 SQL </summary>
+  <div markdown="1" style="margin-left: 20px;">
 
 <img src="" alt="before" align="center" />
 <br/>
-<img src="" alt="after" align="center" />
+<img src="" alt="after" align="center" 
+
+  </div>
+</details>
+
+<details>
+  <summary>2번 SQL </summary>
+  <div markdown="1" style="margin-left: 20px;">
+
+<img src="" alt="before" align="center" />
+<br/>
+<img src="" alt="after" align="center" 
+
+  </div>
+</details>
+
+
 
