@@ -1,0 +1,131 @@
+﻿# 1. 초기화 (기존 DB 삭제 후 재생성)
+SET FOREIGN_KEY_CHECKS = 0;
+DROP DATABASE IF EXISTS FillLife;
+CREATE DATABASE FillLife DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE FillLife;
+
+# ==========================================
+# 1. 회원 (users)
+# ==========================================
+CREATE TABLE users (
+    users_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '회원 고유번호',
+    name VARCHAR(20) NOT NULL COMMENT '이름',
+    email VARCHAR(40) UNIQUE NOT NULL COMMENT '이메일',
+    password VARCHAR(255) NOT NULL COMMENT '비밀번호',
+    tel VARCHAR(20) NOT NULL COMMENT '전화번호',
+    address VARCHAR(255) NOT NULL COMMENT '주소',
+    point INT DEFAULT 500 NOT NULL COMMENT '포인트 (기본 500)',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성일자',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '변경일자'
+);
+
+# ==========================================
+# 2. 카테고리 (category)
+# ==========================================
+CREATE TABLE category (
+    category_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '카테고리 번호',
+    name VARCHAR(20) NOT NULL COMMENT '카테고리 이름'
+);
+
+# ==========================================
+# 3. 상품 (products)
+# ==========================================
+CREATE TABLE products (
+    products_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '상품 번호',
+    category_idx INT NOT NULL COMMENT '카테고리 번호',
+    name VARCHAR(50) NOT NULL COMMENT '상품 이름',
+    price INT NOT NULL COMMENT '가격',
+    stock INT DEFAULT 0 NOT NULL COMMENT '재고량',
+    description TEXT NOT NULL COMMENT '상품 설명',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '등록일',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일자',
+    FOREIGN KEY (category_idx) REFERENCES category(category_idx)
+);
+
+# ==========================================
+# 4. 주문 (orders)
+# ==========================================
+CREATE TABLE orders (
+    orders_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '주문 번호',
+    users_idx INT NOT NULL COMMENT '회원 번호',
+    total_price INT NOT NULL COMMENT '총 주문금액',
+    status VARCHAR(20) NOT NULL COMMENT '주문 상태',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '주문일자',
+    FOREIGN KEY (users_idx) REFERENCES users(users_idx)
+);
+
+# ==========================================
+# 5. 주문상세 (order_items)
+# ==========================================
+CREATE TABLE order_items (
+    order_items_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '주문상세 번호',
+    orders_idx INT NOT NULL COMMENT '주문 번호',
+    products_idx INT NOT NULL COMMENT '상품 번호',
+    `count` INT NOT NULL COMMENT '주문 수량', # count는 예약어라 백틱 사용
+    price_snapshot INT NOT NULL COMMENT '주문당시 상품가격',
+    products_status VARCHAR(10) COMMENT '상품별 상태',
+    FOREIGN KEY (orders_idx) REFERENCES orders(orders_idx),
+    FOREIGN KEY (products_idx) REFERENCES products(products_idx)
+);
+
+# ==========================================
+# 6. 결제 (payments)
+# ==========================================
+CREATE TABLE payments (
+    payments_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '결제 번호',
+    orders_idx INT NOT NULL COMMENT '주문 번호',
+    method VARCHAR(15) NOT NULL COMMENT '결제 수단',
+    discount_amount INT DEFAULT 0 COMMENT '할인 금액',
+    refund_status BOOLEAN DEFAULT FALSE NOT NULL COMMENT '환불 여부',
+    real_amount INT NOT NULL COMMENT '실 결제금액',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '결제일',
+    FOREIGN KEY (orders_idx) REFERENCES orders(orders_idx)
+);
+
+# ==========================================
+# 7. 구매 알람 (order_alert)
+# ==========================================
+CREATE TABLE order_alert (
+    alert_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '알람 설정 번호',
+    users_idx INT NOT NULL COMMENT '회원 번호',
+    products_idx INT NOT NULL COMMENT '상품 번호',
+    con_cycle_set BOOLEAN DEFAULT FALSE COMMENT '소비주기 사용자 설정여부',
+    con_cycle INT NOT NULL COMMENT '소비 주기',
+    next_alert_date TIMESTAMP NOT NULL COMMENT '다음 알림 발송 예정일',
+    alert_set BOOLEAN DEFAULT FALSE COMMENT '알림 활성화 여부',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '설정 생성일',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '설정 변경일',
+    FOREIGN KEY (users_idx) REFERENCES users(users_idx),
+    FOREIGN KEY (products_idx) REFERENCES products(products_idx)
+);
+
+# ==========================================
+# 8. 장바구니 (cart)
+# ==========================================
+CREATE TABLE cart (
+    cart_items_id INT AUTO_INCREMENT PRIMARY KEY COMMENT '장바구니 번호',
+    users_idx INT NOT NULL COMMENT '회원 번호',
+    products_idx INT NOT NULL COMMENT '상품 번호',
+    `count` INT DEFAULT 1 COMMENT '수량', # count 예약어 주의
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '담은 날짜',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 날짜',
+    FOREIGN KEY (users_idx) REFERENCES users(users_idx),
+    FOREIGN KEY (products_idx) REFERENCES products(products_idx)
+);
+
+# ==========================================
+# 9. 리뷰 (reviews)
+# ==========================================
+CREATE TABLE reviews (
+    reviews_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '리뷰 번호',
+    users_idx INT NOT NULL COMMENT '회원 번호',
+    products_idx INT NOT NULL COMMENT '상품 번호',
+    reviews_content TEXT NOT NULL COMMENT '리뷰 내용',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '작성 시간',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 날짜',
+    FOREIGN KEY (users_idx) REFERENCES users(users_idx),
+    FOREIGN KEY (products_idx) REFERENCES products(products_idx)
+);
+
+SET FOREIGN_KEY_CHECKS = 1;
+
