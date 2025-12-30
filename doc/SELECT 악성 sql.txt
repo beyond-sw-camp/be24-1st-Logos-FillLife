@@ -1,0 +1,160 @@
+﻿-- =====================================
+-- 특정 카테고리의 최근 주문 내역 검색
+-- =====================================
+SELECT 
+    o.created_at,
+    p.name AS product_name,
+    c.name AS category_name,
+    oi.count,
+    p.price
+FROM order_items oi
+JOIN orders o ON oi.orders_idx = o.orders_idx
+JOIN products p ON oi.products_idx = p.products_idx
+JOIN category c ON p.category_idx = c.category_idx
+WHERE c.name = (SELECT name FROM category ORDER BY RAND() LIMIT 1)
+  AND o.created_at >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+ORDER BY o.created_at DESC
+LIMIT 50;
+
+-- 카테고리 + 상품 조인 속도 개선 & 날짜 정렬 해결(products 테이블에 카테고리 탐색용 인덱스)
+CREATE INDEX idx_products_category ON products(category_idx);
+-- orders 테이블에 날짜 정렬용 인덱스 (이게 없으면 Filesort 발생)
+CREATE INDEX idx_orders_date ON orders(created_at);
+
+-- 카테고리 & 날짜 정렬 인덱스 제거
+-- (주의: 외래키로 자동 생성된 인덱스가 아니라, 우리가 직접 만든 것만 지움)
+ALTER TABLE products DROP INDEX idx_products_category;
+ALTER TABLE orders DROP INDEX idx_orders_date;
+
+-- =====================================
+-- 내가 지난달에 산 금액 총 합계
+-- =====================================
+
+SELECT 
+    u.name, 
+    COUNT(o.orders_idx) AS total_order_count,
+    SUM(o.total_price) AS total_spent
+FROM orders o
+JOIN users u ON o.users_idx = u.users_idx
+WHERE o.users_idx = FLOOR(1 + RAND() * 10000) 
+  AND o.created_at BETWEEN DATE_SUB(NOW(), INTERVAL 3 MONTH) AND NOW()
+GROUP BY u.users_idx;
+
+-- 유저별 + 날짜별 조회 한방에 해결 (복합 인덱스)
+-- 유저를 먼저 찾고(Equals), 그 안에서 날짜를 범위(Range)로 찾게 함.
+-- 순서가 매우 중요함: (users_idx, created_at)
+CREATE INDEX idx_orders_user_date ON orders(users_idx, created_at);
+
+-- 유저+날짜 복합 인덱스 제거
+ALTER TABLE orders DROP INDEX idx_orders_user_date;
+
+-- =====================================
+-- 지난 6개월간 카테고리별 매출 TOP 10 상품 분석
+-- =====================================
+
+SELECT 
+    c.name AS category_name,
+    p.name AS product_name,
+    SUM(oi.count * oi.price_snapshot) AS total_revenue,
+    COUNT(oi.orders_idx) AS total_sales_count
+FROM order_items oi
+JOIN products p ON oi.products_idx = p.products_idx
+JOIN category c ON p.category_idx = c.category_idx
+JOIN orders o ON oi.orders_idx = o.orders_idx
+WHERE o.created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+GROUP BY p.products_idx
+ORDER BY total_revenue DESC
+LIMIT 10;
+
+-- orders 테이블의 날짜 검색 속도 향상
+CREATE INDEX idx_orders_created_at ON orders(created_at);
+-- order_items 테이블에서 '주문번호', '상품번호', '수량', '가격'을 몽땅 묶음
+CREATE INDEX idx_oi_covering ON order_items(orders_idx, products_idx, count, price_snapshot);
+
+-- orders 테이블의 날짜 인덱스 제거
+ALTER TABLE orders DROP INDEX idx_orders_created_at;
+-- order_items 테이블의 커버링 인덱스 제거
+ALTER TABLE order_items DROP INDEX idx_oi_covering;
+
+-- =====================================
+-- 리뷰 내용 키워드 검색
+-- =====================================
+
+SELECT 
+    u.name AS reviewer_name,
+    p.name AS product_name,
+    r.reviews_content,
+    r.created_at
+FROM reviews r
+JOIN users u ON r.users_idx = u.users_idx
+JOIN products p ON r.products_idx = p.products_idx
+WHERE r.reviews_content LIKE '%배송%' 
+   OR r.reviews_content LIKE '%좋아요%'
+ORDER BY r.created_at DESC
+LIMIT 20;
+
+-- reviews 테이블의 내용(reviews_content)에 전문 검색 인덱스 생성
+CREATE FULLTEXT INDEX idx_ft_reviews_content ON reviews(reviews_content);
+-- 생성했던 전문 검색 인덱스 삭제
+ALTER TABLE reviews DROP INDEX idx_ft_reviews_content;
+
+-- jmeter용 수정된 튜닝 쿼리
+SELECT 
+    u.name AS reviewer_name,
+    p.name AS product_name,
+    r.reviews_content,
+    r.created_at
+FROM reviews r
+JOIN users u ON r.users_idx = u.users_idx
+JOIN products p ON r.products_idx = p.products_idx
+WHERE MATCH(r.reviews_content) AGAINST('배송 좋아요' IN BOOLEAN MODE)
+ORDER BY r.created_at DESC
+LIMIT 20;
+
+-- ============================================================
+-- 특정 가격대의 주문 내역 최신순 조회 (Filesort 발생 유도)
+-- ============================================================
+
+SELECT 
+    o.orders_idx,
+    o.users_idx,
+    o.total_price,
+    o.created_at
+FROM orders o
+WHERE o.total_price BETWEEN (FLOOR(10000 + RAND() * 50000))       -- 1만 ~ 6만 사이 랜덤 시작
+                        AND (FLOOR(60000 + RAND() * 50000))       -- 6만 ~ 11만 사이 랜덤 끝
+ORDER BY o.created_at DESC                                        -- 날짜 정렬 (인덱스 없으면 최악)
+LIMIT 100;
+
+-- 가격(total_price)으로 거르고, 날짜(created_at)로 정렬하는 것을 한 방에 처리하는 '복합 인덱스'
+-- 이 인덱스가 있으면 정렬 작업(Sort) 자체가 사라집니다.
+CREATE INDEX idx_orders_price_date ON orders(total_price, created_at);
+
+-- 인덱스 삭제 (Before 테스트용)
+ALTER TABLE orders DROP INDEX idx_orders_price_date;
+
+-- ============================================================
+-- 랜덤 카테고리의 상품별 판매 합계 순위 (임시 테이블 발생 유도)
+-- ============================================================
+
+SELECT 
+    p.name AS product_name,
+    SUM(oi.count) AS total_sales_qty,
+    SUM(oi.price_snapshot * oi.count) AS total_revenue
+FROM order_items oi
+JOIN products p ON oi.products_idx = p.products_idx
+WHERE p.category_idx = (SELECT category_idx FROM category ORDER BY RAND() LIMIT 1) -- 랜덤 카테고리
+GROUP BY p.products_idx
+ORDER BY total_revenue DESC
+LIMIT 20;
+
+-- 상품 테이블에서 카테고리 검색 속도 UP
+CREATE INDEX idx_products_cat_idx ON products(category_idx);
+
+-- 주문 상세 테이블에서 '상품번호' 기준으로 묶어서 계산할 때
+-- 테이블을 열어보지도 않고 인덱스만 읽어서 끝내는 '커버링 인덱스' 적용
+CREATE INDEX idx_oi_product_stat ON order_items(products_idx, count, price_snapshot);
+
+-- 인덱스 삭제 (Before 테스트용)
+ALTER TABLE products DROP INDEX idx_products_cat_idx;
+ALTER TABLE order_items DROP INDEX idx_oi_product_stat;
