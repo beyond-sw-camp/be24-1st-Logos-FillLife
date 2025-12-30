@@ -114,9 +114,9 @@ CREATE TABLE cart (
 );
 
 -- ==========================================
--- 9. 리뷰 (review)
+-- 9. 리뷰 (reviews)
 -- ==========================================
-CREATE TABLE review (
+CREATE TABLE reviews (
     reviews_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '리뷰 번호',
     users_idx INT NOT NULL COMMENT '회원 번호',
     products_idx INT NOT NULL COMMENT '상품 번호',
