@@ -1,12 +1,12 @@
-﻿# 1. 초기화 (기존 DB 삭제 후 재생성)
+﻿-- 1. 초기화 (기존 DB 삭제 후 재생성)
 SET FOREIGN_KEY_CHECKS = 0;
 DROP DATABASE IF EXISTS FillLife;
 CREATE DATABASE FillLife DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE FillLife;
 
-# ==========================================
-# 1. 회원 (users)
-# ==========================================
+-- ==========================================
+-- 1. 회원 (users)
+-- ==========================================
 CREATE TABLE users (
     users_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '회원 고유번호',
     name VARCHAR(20) NOT NULL COMMENT '이름',
@@ -19,17 +19,17 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '변경일자'
 );
 
-# ==========================================
-# 2. 카테고리 (category)
-# ==========================================
+-- ==========================================
+-- 2. 카테고리 (category)
+-- ==========================================
 CREATE TABLE category (
     category_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '카테고리 번호',
     name VARCHAR(20) NOT NULL COMMENT '카테고리 이름'
 );
 
-# ==========================================
-# 3. 상품 (products)
-# ==========================================
+-- ==========================================
+-- 3. 상품 (products)
+-- ==========================================
 CREATE TABLE products (
     products_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '상품 번호',
     category_idx INT NOT NULL COMMENT '카테고리 번호',
@@ -42,9 +42,9 @@ CREATE TABLE products (
     FOREIGN KEY (category_idx) REFERENCES category(category_idx)
 );
 
-# ==========================================
-# 4. 주문 (orders)
-# ==========================================
+-- ==========================================
+-- 4. 주문 (orders)
+-- ==========================================
 CREATE TABLE orders (
     orders_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '주문 번호',
     users_idx INT NOT NULL COMMENT '회원 번호',
@@ -54,23 +54,23 @@ CREATE TABLE orders (
     FOREIGN KEY (users_idx) REFERENCES users(users_idx)
 );
 
-# ==========================================
-# 5. 주문상세 (order_items)
-# ==========================================
+-- ==========================================
+-- 5. 주문상세 (order_items)
+-- ==========================================
 CREATE TABLE order_items (
     order_items_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '주문상세 번호',
     orders_idx INT NOT NULL COMMENT '주문 번호',
     products_idx INT NOT NULL COMMENT '상품 번호',
-    `count` INT NOT NULL COMMENT '주문 수량', # count는 예약어라 백틱 사용
+    `count` INT NOT NULL COMMENT '주문 수량', -- count는 예약어라 백틱 사용
     price_snapshot INT NOT NULL COMMENT '주문당시 상품가격',
     products_status VARCHAR(10) COMMENT '상품별 상태',
     FOREIGN KEY (orders_idx) REFERENCES orders(orders_idx),
     FOREIGN KEY (products_idx) REFERENCES products(products_idx)
 );
 
-# ==========================================
-# 6. 결제 (payments)
-# ==========================================
+-- ==========================================
+-- 6. 결제 (payments)
+-- ==========================================
 CREATE TABLE payments (
     payments_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '결제 번호',
     orders_idx INT NOT NULL COMMENT '주문 번호',
@@ -82,9 +82,9 @@ CREATE TABLE payments (
     FOREIGN KEY (orders_idx) REFERENCES orders(orders_idx)
 );
 
-# ==========================================
-# 7. 구매 알람 (order_alert)
-# ==========================================
+-- ==========================================
+-- 7. 구매 알람 (order_alert)
+-- ==========================================
 CREATE TABLE order_alert (
     alert_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '알람 설정 번호',
     users_idx INT NOT NULL COMMENT '회원 번호',
@@ -99,23 +99,23 @@ CREATE TABLE order_alert (
     FOREIGN KEY (products_idx) REFERENCES products(products_idx)
 );
 
-# ==========================================
-# 8. 장바구니 (cart)
-# ==========================================
+-- ==========================================
+-- 8. 장바구니 (cart)
+-- ==========================================
 CREATE TABLE cart (
     cart_items_id INT AUTO_INCREMENT PRIMARY KEY COMMENT '장바구니 번호',
     users_idx INT NOT NULL COMMENT '회원 번호',
     products_idx INT NOT NULL COMMENT '상품 번호',
-    `count` INT DEFAULT 1 COMMENT '수량', # count 예약어 주의
+    `count` INT DEFAULT 1 COMMENT '수량', -- count 예약어 주의
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '담은 날짜',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 날짜',
     FOREIGN KEY (users_idx) REFERENCES users(users_idx),
     FOREIGN KEY (products_idx) REFERENCES products(products_idx)
 );
 
-# ==========================================
-# 9. 리뷰 (reviews)
-# ==========================================
+-- ==========================================
+-- 9. 리뷰 (reviews)
+-- ==========================================
 CREATE TABLE reviews (
     reviews_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '리뷰 번호',
     users_idx INT NOT NULL COMMENT '회원 번호',
@@ -128,4 +128,3 @@ CREATE TABLE reviews (
 );
 
 SET FOREIGN_KEY_CHECKS = 1;
-
