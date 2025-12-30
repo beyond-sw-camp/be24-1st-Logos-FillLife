@@ -1,0 +1,49 @@
+﻿-- ======================================
+-- 특정 카테고리 구매자 일괄 알림 등록
+-- ======================================
+
+INSERT INTO order_alert (users_idx, products_idx, con_cycle, next_alert_date, alert_set, created_at)
+SELECT 
+    o.users_idx,
+    oi.products_idx,
+    30,        -- 기본 주기 30일
+    DATE_ADD(NOW(), INTERVAL 30 DAY),
+    1,         -- 알림 ON
+    NOW()
+FROM order_items oi
+JOIN orders o ON oi.orders_idx = o.orders_idx
+JOIN products p ON oi.products_idx = p.products_idx
+JOIN category c ON p.category_idx = c.category_idx
+WHERE c.name = (SELECT name FROM category ORDER BY RAND() LIMIT 1) -- 랜덤 카테고리 선택
+  AND o.created_at >= DATE_SUB(NOW(), INTERVAL 3 MONTH);
+
+-- 튜닝용 인덱스 생성
+CREATE INDEX idx_products_category ON products(category_idx);
+CREATE INDEX idx_orders_created_at ON orders(created_at);
+
+-- 인덱스 삭제
+ALTER TABLE products DROP INDEX idx_products_category;
+ALTER TABLE orders DROP INDEX idx_orders_created_at;
+
+-- ======================================
+-- 명예의 전당: 베스트셀러 상품 장바구니 증정
+-- ======================================
+
+INSERT INTO cart (users_idx, products_idx, count, created_at)
+SELECT 
+    FLOOR(1 + RAND() * 10000),  -- 1~10000 사이의 랜덤 유저 ID 생성
+    oi.products_idx,
+    1,                          -- 수량 1개
+    NOW()
+FROM order_items oi
+JOIN orders o ON oi.orders_idx = o.orders_idx
+WHERE o.created_at >= DATE_SUB(NOW(), INTERVAL 1 YEAR) -- 1년치 데이터 스캔
+GROUP BY oi.products_idx
+ORDER BY SUM(oi.count) DESC  -- 판매량 순 정렬
+LIMIT 10;
+
+-- 튜닝용 커버링 인덱스 생성
+CREATE INDEX idx_oi_covering_simple ON order_items(orders_idx, products_idx, count);
+
+-- 인덱스 삭제
+ALTER TABLE order_items DROP INDEX idx_oi_covering_simple;
