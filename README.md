@@ -17,6 +17,11 @@
 </div>
 <br/>
 
+## 📅 프로젝트 기간
+
+2025.12.29 ~ 2025.12.30
+<br/><br/>
+
 ## 📌 프로젝트 소개
 <blockquote> 
 사용자 소비 패턴 분석 기반의 소진 주기 예측 및 장바구니 자동 완성 플랫폼
@@ -24,7 +29,13 @@
 
 사용자의 쇼핑몰 행동 데이터(Log)와 구매 이력(Order)을 분석하여, 생필품이 떨어질 시점을 AI처럼 예측(Prediction)해 알림을 주고, 접속 시 구매할 확률이 높은 상품을 장바구니에 미리 담아주는(Auto-Completion) 초개인화 커머스이다.
 <br/><br/>
-<br/>
+
+## 📄 요구사항 정의서
+
+<a href='./doc/FillLife 요구사항 정의서.pdf' alt="FillLife_system architecture"> 
+<img src="./img/FillLife_요구사항.jpg" alt="FillLife_system architecture" align="center" /> > 요구사항 정의서 </a>
+<br/><br/>
+
 
 
 ## 🛠️ 기술 스택
@@ -49,15 +60,23 @@
 
 <br>
 
-## 📅 프로젝트 기간
-
-2025.12.29 ~ 2025.12.30
-
 <br/>
 
 ## 🚧 아키텍쳐 설계
 
 <img src="./doc/FillLife System Architecture.png" alt="FillLife_system architecture" align="center" />
+
+<br/>
+<details>
+  <summary>레플리케이션을 선택한 이유</summary>
+  <div markdown="1">
+  <blockquote style="margin-left: 20px;">
+
+본 프로젝트는 조회(Read) 트래픽이 80% 이상을 차지하는 이커머스 서비스의 특성과 대용량 데이터 분석에 따른 부하를 효율적으로 관리하기 위해 HAProxy 기반의 Master-Slave 레플리케이션 아키텍처를 구축했습니다. 쓰기(Write) 작업은 Master DB가, 대량의 조회와 ‘소비 패턴 분석’ 같은 무거운 쿼리는 HAProxy의 라운드 로빈 방식을 통해 Slave DB가 전담하도록 트래픽을 분리함으로써, 트랜잭션 잠금(Locking) 현상을 방지하고 일반 사용자의 구매 프로세스 속도를 쾌적하게 유지했습니다. 이를 통해 분석 쿼리와 트랜잭션을 효과적으로 격리했을 뿐만 아니라, 실시간 데이터 동기화를 통해 장애 발생 시에도 서비스를 지속할 수 있는 고가용성(High Availability) 환경을 확보했습니다.
+  </blockquote>
+  <br>
+  </div>
+</details>
 
 <br/>
 
@@ -67,11 +86,7 @@
 
 <br/>
 
-## 📄 요구사항 정의서
 
-<a href='./doc/FillLife 요구사항 정의서.pdf' alt="FillLife_system architecture"> 
-<img src="./img/FillLife_요구사항.jpg" alt="FillLife_system architecture" align="center" /> > 요구사항 정의서 </a>
-<br/><br/>
 
 ## 🔎 프로젝트 기획 배경 
 ### 🔹 '경직된 구독'에서 '유연한 예측'으로 <br />
@@ -95,4 +110,11 @@
 
   결국 미래의 쇼핑몰은 단순히 물건을 파는 곳이 아니라, 소비자의 시간과 노력을 아껴주는 '필수 생활 관리 서비스'로 안착하게 될 것이다. 데이터를 통해 사용자의 라이프사이클을 이해하고, 그들의 장바구니를 선제적으로 관리해 주는 것. 이것이 바로 우리가 지향해야 할 차세대 지능형 이커머스의 모습이다.
 
+
+
+## 💡 부하테스트 전후 차이 
+
+<img src="" alt="before" align="center" />
+<br/>
+<img src="" alt="after" align="center" />
 
