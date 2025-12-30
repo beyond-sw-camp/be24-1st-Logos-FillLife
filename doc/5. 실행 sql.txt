@@ -1,0 +1,11 @@
+﻿CALL loop_insert_categories();
+CALL loop_insert_users_realistic();  -- 1만명 생성
+CALL loop_insert_products_realistic(); -- 리얼한 상품명 2천개
+CALL loop_insert_orders_transaction(); -- 10만건 주문 (시간 좀 걸림)
+CALL loop_insert_alerts();
+CALL loop_insert_reviews();
+
+-- 확인
+SELECT '회원' AS TBL, COUNT(*) FROM users
+UNION ALL SELECT '상품', COUNT(*) FROM products
+UNION ALL SELECT '주문', COUNT(*) FROM orders;

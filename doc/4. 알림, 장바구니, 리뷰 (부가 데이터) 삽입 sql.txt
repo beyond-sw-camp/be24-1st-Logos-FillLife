@@ -1,0 +1,50 @@
+﻿DELIMITER $$
+
+-- 1. 구매 알림 (3만 건)
+DROP PROCEDURE IF EXISTS loop_insert_alerts$$
+CREATE PROCEDURE loop_insert_alerts()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    SET autocommit = 0;
+    WHILE i <= 30000 DO
+        INSERT INTO order_alert (users_idx, products_idx, con_cycle_set, con_cycle, next_alert_date, alert_set)
+        VALUES (
+            FLOOR(1 + RAND() * 10000), -- 회원 랜덤
+            FLOOR(1 + RAND() * 2000),  -- 상품 랜덤 (2000개 기준)
+            IF(RAND() > 0.5, 1, 0),    -- 수동/자동 반반
+            30,                        -- 주기
+            DATE_ADD(NOW(), INTERVAL FLOOR(RAND() * 20) - 10 DAY), -- 오늘 전후 10일
+            1                          -- 알림 ON
+        );
+        SET i = i + 1;
+        IF i % 1000 = 0 THEN COMMIT; END IF;
+    END WHILE;
+    COMMIT;
+    SET autocommit = 1;
+END$$
+
+-- 2. 리뷰 데이터 (5천 건) - ★ 테이블명 reviews 로 수정됨
+DROP PROCEDURE IF EXISTS loop_insert_reviews$$
+CREATE PROCEDURE loop_insert_reviews()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DECLARE v_content VARCHAR(100);
+    SET autocommit = 0;
+    WHILE i <= 5000 DO
+        SET v_content = ELT(FLOOR(1 + RAND() * 5), '배송이 정말 빨라요!', '재구매 의사 있습니다.', '가격 대비 품질이 좋네요.', '생각보다 별로였어요.', '잘 쓰겠습니다~');
+        
+        -- [수정] review -> reviews (실제 테이블 이름)
+        INSERT INTO reviews (users_idx, products_idx, reviews_content)
+        VALUES (
+            FLOOR(1 + RAND() * 10000),
+            FLOOR(1 + RAND() * 2000),
+            v_content
+        );
+        SET i = i + 1;
+        IF i % 1000 = 0 THEN COMMIT; END IF;
+    END WHILE;
+    COMMIT;
+    SET autocommit = 1;
+END$$
+
+DELIMITER ;
