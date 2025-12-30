@@ -2,7 +2,7 @@
 
 <h1 align="center" style="color: #61E786;">🛒 FillLife </h1><br>
 <div align="center">
-  <img src="./doc/FillLife_Logo.png" alt="FillLife logo" height="400" align="center" />
+  <img src="./img/FillLife_Logo.png" alt="FillLife logo" height="400" align="center" />
 </div>
 <h3 align="center">3팀 - Logos (Log-based Ordering System) </h3><br>
 
@@ -53,26 +53,25 @@
 
 2025.12.29 ~ 2025.12.30
 
-### 📄 요구사항 정의서
-
-<img src="./img/FillLife_요구사항.jpg" alt="FillLife_system architecture" align="center" />
-
-
-<a href='./doc/FillLife 요구사항 정의서.pdf' alt="FillLife_system architecture" >요구사항 정의서</a>
-
-
 <br/>
 
-## 아키텍쳐 설계
+## 🚧 아키텍쳐 설계
 
 <img src="./doc/FillLife System Architecture.png" alt="FillLife_system architecture" align="center" />
 
 <br/>
 
-### 🧩 ERD
+## 🧩 ERD
+
 <img src='./doc/FillLife_erd.png' alt='FillLife_ERD' alien='center'>
 
 <br/>
+
+## 📄 요구사항 정의서
+
+<a href='./doc/FillLife 요구사항 정의서.pdf' alt="FillLife_system architecture"> 
+<img src="./img/FillLife_요구사항.jpg" alt="FillLife_system architecture" align="center" /> > 요구사항 정의서 </a>
+<br/><br/>
 
 ## 🔎 프로젝트 기획 배경 
 ### 🔹 '경직된 구독'에서 '유연한 예측'으로 <br />
