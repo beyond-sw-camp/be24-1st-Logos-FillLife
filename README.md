@@ -92,28 +92,17 @@
 
 ## 🔎 프로젝트 기획 배경
 
-### 🔹 '경직된 구독'에서 '유연한 예측'으로 <br />
+**1. 기존 서비스의 한계 (Pain Point)**
+기존 정기 배송 서비스는 개인마다 다른 소비 속도를 반영하지 못해 상품이 쌓이거나 부족한 문제가 발생했습니다. 또한, 매번 반복되는 생필품 구매 과정은 사용자에게 불필요한 '쇼핑 노동'을 강요하고 있습니다.
 
-그동안 정기 배송(Subscription) 모델은 소비자의 편의를 돕는 혁신으로 여겨졌다. 그러나 '쿠팡'과 같은 즉시 배송이 보편화된 오늘날, 굳이 비축을 위해 미리 물건을 받아두는 경직된 정기 배송은 오히려 소비자에게 부담이 되고 있다. 내가 아직 샴푸를 다 쓰지 않았는데도 정해진 날짜에 물건이 배달되는 것은 더 이상 '혜택'이 아닌 '재고 관리의 스트레스'로 다가오기 때문이다.
+**2. 해결 솔루션 (Solution)**
+저희는 **사용자 행동 로그(Log) 기반의 소비 패턴 분석**을 통해 이 문제를 해결했습니다.
 
-이러한 현상은 시장을 '경직된 구독'에서 '유연한 예측'으로 재편하고 있다. KB금융지주 경영연구소의 보고서에 따르면, 현재 한국 쇼핑 구독 시장은 46%의 높은 침투율을 보이며 성숙기에 접어들었다. 그러나 시장 내부에서는 품목에 따라 수요의 극심한 양극화 현상이 나타나고 있다.
+- **유연한 예측:** 정해진 날짜가 아닌, 데이터가 예측한 '실제 필요 시점'을 파악
+- **장바구니 자동 완성:** 접속 시점에 필요한 물품을 미리 장바구니에 담아주는(Auto-Fill) 편의 제공
 
-식단 관리, 영양제, 전통주, 꽃 등 전문적인 큐레이션이 필요하거나 명확한 목적성을 가진 '버티컬 커머스' 영역에서는 정기배송 수요가 꾸준히 상승하고 있다. 이는 소비자들이 해당 분야에서 '전문가의 제안'과 '정기적인 즐거움'을 기대하기 때문이다.
-반면 소모품 및 공산품(Commodity)에 대한 정기배송 수요는 급격히 감소했다. 세제, 생수, 화장지 등 어디서나 쉽게 구할 수 있는 공산품은 로켓배송과 같은 즉시 배송 서비스가 보편화되면서, 굳이 한 달 뒤를 예측해 미리 묶여있을 필요가 없어졌다. 결과적으로 기존의 정기 배송은 소비자 개개인의 실제 소모 속도를 반영하지 못하는 한계만을 드러내며 '경직된 서비스'로 전락했다.
-
-또한 최근 소비자의 상품 구매 가치는 ‘가격 할인'에서 '초개인화 맞춤 케어'로 가치 중심이 이동했다. 이제 소비자들은 단순히 몇 퍼센트의 가격 할인을 받기 위해 집에 재고가 쌓이는 불편함을 감수하지 않는다. 자신의 실제 소비 주기에 맞춘 '초개인화된 관리'를 원하고 있으며, 이는 곧 데이터 기반의 예측 커머스가 공산품 시장의 새로운 돌파구가 되어야 함을 시사한다.
-
-### 🔹 쇼핑은 '즐거움'인가, '피로한 노동'인가? <br />
-
-우리는 흔히 쇼핑을 즐거운 행위라고 생각하지만, 사실 생필품 구매 과정은 철저히 '피로한 노동'에 가깝다. 매번 똑같은 치약, 화장지, 생수를 검색하고, 장바구니에 담고, 결제하는 반복적인 여정은 현대인의 구매 여정에서 이탈을 유발하는 가장 큰 요인 중 하나다.
-
-이 지점에서 데이터 기반의 장바구니 자동 완성(Auto-Fill) 기술이 등장한다. 이는 소비자가 구매 의사를 결정하기 전, 과거의 구매 로그(Log)를 정밀하게 분석하여 "이때쯤이면 이 물건이 필요하시죠?"라며 미리 장바구니를 채워 두는 서비스다.
-
-### 🔹 데이터가 제안하는 '완벽한 타이밍' <br />
-
-장바구니 자동 완성 서비스는 쇼핑의 단계를 획기적으로 줄여준다. 사용자가 앱을 켜는 순간, 시스템은 이미 사용자의 소비 패턴을 계산해 필요한 품목들을 리스트업해둔다. 소비자는 그저 확인 버튼만 누르면 된다.
-
-결국 미래의 쇼핑몰은 단순히 물건을 파는 곳이 아니라, 소비자의 시간과 노력을 아껴주는 '필수 생활 관리 서비스'로 안착하게 될 것이다. 데이터를 통해 사용자의 라이프사이클을 이해하고, 그들의 장바구니를 선제적으로 관리해 주는 것. 이것이 바로 우리가 지향해야 할 차세대 지능형 이커머스의 모습이다.
+**3. 개발 목표**
+단순한 판매를 넘어, 데이터를 통해 사용자의 라이프사이클을 관리하는 **'차세대 지능형 이커머스 플랫폼'** 구축을 목표로 합니다.
 
 <br/>
 
@@ -132,12 +121,27 @@
 
 #### 🔹 Jmeter 기본 세팅 <br />
 
-<img src="./doc/FillLife _부하테스트_기본세팅.jpg" alt="Defalt setting" align="center" />
+<img src="./img/FillLife _부하테스트_기본세팅.jpg" alt="Defalt setting" align="center" />
 <br/><br/>
 
 #### 🔹 1. 내가 지난달에 산 금액 총 합계 <br />
 
-<img src="./doc/FillLife_부하테스트01.png" alt="Defalt setting" align="center" />
+```sql
+SELECT
+    u.name,
+    COUNT(o.orders_idx) AS total_order_count,
+    SUM(o.total_price) AS total_spent
+FROM orders o
+JOIN users u ON o.users_idx = u.users_idx
+WHERE o.users_idx = FLOOR(1 + RAND() * 10000)
+  AND o.created_at BETWEEN DATE_SUB(NOW(), INTERVAL 3 MONTH) AND NOW()
+GROUP BY u.users_idx;
+```
+
+- 복합 인덱스 적용 `(users_idx, created_at)`: 테이블 풀 스캔(Full Scan)을 방지하고 인덱스 레인지 스캔 유도
+- 컬럼 순서 최적화: 동등 조건(`=`)인 `users_idx`를 선행 컬럼으로, 범위 조건(`BETWEEN`)인 `created_at`을 후행으로 배치하여 인덱스 스캔 효율 극대화
+
+<img src="./img/FillLife_부하테스트01.png" alt="Defalt setting" align="center" />
 <br/>
 - 처리량(Throughput): 튜닝 전 대비 57.7% 급증 (141.5/sec → 223.1/sec) <br>
 - 평균 응답 속도(Average Latency): 튜닝 전 대비 36.6% 단축 (647ms → 410ms) <br>
@@ -145,7 +149,43 @@
 
 #### 🔹 2. 리뷰 내용 키워드 검색 <br />
 
-<img src="./doc/FillLife_부하테스트02.png" alt="Defalt setting" align="center" />
+**[AS-IS] 튜닝 전 (Full Table Scan 발생)**
+
+```sql
+SELECT
+    u.name AS reviewer_name,
+    p.name AS product_name,
+    r.reviews_content,
+    r.created_at
+FROM reviews r
+JOIN users u ON r.users_idx = u.users_idx
+JOIN products p ON r.products_idx = p.products_idx
+WHERE r.reviews_content LIKE '%배송%'
+   OR r.reviews_content LIKE '%좋아요%'
+ORDER BY r.created_at DESC
+LIMIT 20;
+```
+
+- Full-Text Index (전문 검색) 적용: 기존 LIKE '%...%' 방식의 풀 테이블 스캔(Full Scan) 한계를 극복하기 위해 reviews_content에 n-gram 파서 기반의 Full-Text Index 생성 (Inverted Index 활용)
+- 데이터 경량화 (Projection): 불필요한 전체 컬럼 조회(SELECT \*)를 지양하고, 화면에 필요한 컬럼만 지정하여 네트워크 패킷 사이즈 최적화
+
+**[TO-BE] 튜닝 후 (Full-Text Index 적용)**
+
+```sql
+SELECT
+    u.name AS reviewer_name,
+    p.name AS product_name,
+    r.reviews_content,
+    r.created_at
+FROM reviews r
+JOIN users u ON r.users_idx = u.users_idx
+JOIN products p ON r.products_idx = p.products_idx
+WHERE MATCH(r.reviews_content) AGAINST('배송 좋아요' IN BOOLEAN MODE)
+ORDER BY r.created_at DESC
+LIMIT 20;
+```
+
+<img src="./img/FillLife_부하테스트02.png" alt="Defalt setting" align="center" />
 <br/>
 
 - 처리량(Throughput): 튜닝 전 대비 62.5% 급증 (492.1/sec → 799.8/sec)<br>
