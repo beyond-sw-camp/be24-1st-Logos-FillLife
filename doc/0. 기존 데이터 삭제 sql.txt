@@ -1,0 +1,14 @@
+﻿SET FOREIGN_KEY_CHECKS = 0; -- 외래키 체크 해제
+
+-- 모든 테이블 데이터 삭제 (순서 상관 없음)
+TRUNCATE TABLE reviews;
+TRUNCATE TABLE cart;
+TRUNCATE TABLE order_alert;
+TRUNCATE TABLE payments;
+TRUNCATE TABLE order_items;
+TRUNCATE TABLE orders;
+TRUNCATE TABLE products;
+TRUNCATE TABLE users;
+TRUNCATE TABLE category;
+
+SET FOREIGN_KEY_CHECKS = 1; -- 외래키 체크 다시 활성화
